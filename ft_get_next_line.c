@@ -16,43 +16,55 @@
 #include <fcntl.h>
 #include <stdio.h>
 
+#define BUFFER_SIZE 10
+
+int	check_backslash(char *ptr);
 char	*ft_get_next_line(void)
 {
 
 	char 	*res;
-	int	buf_size;
 
-	buf_size = 50;
-	res = 0;
 	int	fd;
 	int 	test;
-	char	buf[100];
-	int	count;
-
-	count = 0;
+	char	buf[BUFFER_SIZE];
+	int	i;
+	int	y;
+	i = 0;
+	y = 0;
 	test = 0;
+	res = 0;
 	fd = open("./test", O_RDONLY);
-	test = read(fd, buf, 10);
-	int 	i = 0;
-	while(!check_backslash(buf))
-	{
-		count += read(fd, buf, buf_size);
-	}
+
 	return (res);
 }
 
-int	check_backslash(char *ptr)
+char	*check_buffer(char *buff, int buff_size)
 {
 	int	i;
+	int	j;
+	char	*res;
 
 	i = 0;
-	while (str[i])
+	res = 0;
+	j = 0;
+	while (buff[i])
 	{
-		if (str[i] == '\n')
-			return (1);
+		if (buff[i] == '\n')
+			break;
 		i++;
 	}
-	return (0);
+	if (i == buff_size)
+		res = malloc(buff_size);
+	else
+		res = malloc(i + 1);
+	if (!res)
+		return (NULL);
+	while (j <= i)
+	{
+		res[j] = buff[j];
+		j++;
+	}
+	return (res);
 }
 
 int main(void)
