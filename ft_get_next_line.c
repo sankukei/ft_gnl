@@ -15,60 +15,46 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include "get_next_line.h"
 
-#define BUFFER_SIZE 10
-
-int	check_backslash(char *ptr);
-char	*ft_get_next_line(void)
-{
-
-	char 	*res;
-
-	int	fd;
-	int 	test;
-	char	buf[BUFFER_SIZE];
-	int	i;
-	int	y;
-	i = 0;
-	y = 0;
-	test = 0;
-	res = 0;
-	fd = open("./test", O_RDONLY);
-
-	return (res);
-}
-
-char	*check_buffer(char *buff, int buff_size)
+int	ft_check_buffer(char *str)
 {
 	int	i;
-	int	j;
-	char	*res;
 
 	i = 0;
-	res = 0;
-	j = 0;
-	while (buff[i])
+	while (str[i])
 	{
-		if (buff[i] == '\n')
-			break;
+		if (str[i] == '\n')
+			return (1);
 		i++;
 	}
-	if (i == buff_size)
-		res = malloc(buff_size);
-	else
-		res = malloc(i + 1);
-	if (!res)
-		return (NULL);
-	while (j <= i)
+	return (0);
+}
+
+char	*ft_get_next_line(int fd)
+{
+	char	*res;
+	int	i;
+
+	i = 0;
+	res = 0;
+	static char	buf[BUFFER_SIZE];
+	while (read(fd, buf, BUFFER_SIZE))
 	{
-		res[j] = buff[j];
-		j++;
+		if (ft_check_buffer(buf))
+		{
+			//JOIN LE STASH MAGIQUE
+		}
 	}
 	return (res);
 }
 
 int main(void)
 {
-	ft_get_next_line();
-	return (0);
+	int	fd;
+
+	fd = open("./test", O_RDONLY);
+	ft_get_next_line(fd);
+
 }
