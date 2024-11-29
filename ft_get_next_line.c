@@ -18,7 +18,7 @@
 #include <stdlib.h>
 #include "get_next_line.h"
 
-#define BUFFER_SIZE 10
+#define BUFFER_SIZE 50 
 
 char	*ft_strjoin(int count, char *s1, char *s2);
 int	ft_check_buffer(char *str);
@@ -33,6 +33,34 @@ size_t	ft_strlen(char *str)
 		i++;
 	}
 	return (i);
+}
+
+static char	*purge_string(char *str)
+{
+	int	i;
+	int	y;
+	char	*res;
+
+	res = 0;
+	i = 0;
+	y = 0;
+	while (str[i])
+	{
+		if (str[i] == '\n')
+			break;
+		i++;
+	}
+	i++;
+	y = i;
+	while (str[y])
+		y++;
+	res = malloc(y + 1);
+	y = 0;
+	while (str[i])
+		res[y++] = str[i++];
+	while (res[y])
+		res[y++] = 0;
+	return (res);
 }
 
 int	ft_check_buffer(char *str)
@@ -90,6 +118,20 @@ char	*xd(char *dest, char *buf)
 	return (dest);
 }
 
+void	*ft_memcpy(void *dest, const void *src, size_t n)
+{
+	unsigned char		*a;
+	const unsigned char	*b;
+
+	if (!dest && !src)
+		return (dest);
+	a = dest;
+	b = src;
+	while (n--)
+		*a++ = *b++;
+	return (dest);
+}
+
 char	*get_next_line(int fd)
 {
 	char	*res;
@@ -101,31 +143,39 @@ char	*get_next_line(int fd)
 	res = NULL;
 	count = 1;
 	static char	buf[BUFFER_SIZE];
-	//printf("BUFFER: %s\n", buf);
-	while (read(fd, buf, BUFFER_SIZE) && ft_check_buffer(buf))
+	if (buf[0])
+		res = ft_strjoin(count, res, buf);
+	while (read(fd, buf, BUFFER_SIZE))
 	{
+
 		res = ft_strjoin(count, res, buf);
 		if (!res)
 			return (NULL);
+		if (ft_check_buffer(buf))
+		{
+			ft_memcpy(buf, purge_string(buf), BUFFER_SIZE);
+			//buf = purge_string(buf);
+//			res = ft_strjoin(count, res, buf);
+			int len = ft_strlen(res);
+			res[len] = '\n';
+			return (res);
+		}
 		count++;
 	}
-	//int 	y;
-	//y = 0;
-	//y = ft_strlen(res + 1);
-	//while (res && res[y])
-	//	y++;
-	/*if (ft_check_buffer(buf))
-	{
-		while (buf[i] != '\n')
-			res[y++] = buf[i++];
-	}*/
-	if (ft_check_buffer(buf))
-		res = ft_strjoin(count, res, buf);
-	int len = ft_strlen(res);
-	res[len] = '\n';
-	//res[y] = '\n';
 	return (res);
 }
+/*
+char	*gnl_bis(int fd)
+{
+	char	*res;
+	int	count;
+
+	count = 0;
+	while (read(fd, buf, BUFFER_SIZE))
+	{
+		
+	}
+}*/
 
 int main(void)
 {
