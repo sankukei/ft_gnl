@@ -18,21 +18,90 @@
 #include <stdlib.h>
 #include "get_next_line.h"
 
-#define BUFFER_SIZE 10
+#define BUFFER_SIZE 2
 
-char	*ft_strjoin(int count, char *s1, char *s2);
 int	ft_check_buffer(char *str);
-size_t	ft_strlen(char *str)
+char	*ft_strjoin(char *s1, char *s2);
+char	*ft_fils(char *str);
+void	ft_purge(char *str);
+
+char	*get_next_line(int fd)
 {
-	size_t	i;
+	char	*res;
+	int	count;
+	int	bol;
+	res = 0;
+	count = 0;
+	bol = 0;
+	static char	buf[BUFFER_SIZE];
+ 
+	 while (!ft_check_buffer(buf))
+	{
+		count = read(fd, buf, BUFFER_SIZE);
+		res = ft_strjoin(res, buf);
+		res = ft_fils(res);
+	}
+	if (count > 0)
+		ft_purge(buf);
+	 while (count == 0 && buf[0] && bol != 1)
+	{
+		res = ft_fils(buf);
+		ft_purge(buf);
+		bol = 1;
+	}
+	return (res);
+}
+
+void	ft_purge(char *str)
+{
+	int	i;
+	int	y;
+
+	i = 0;
+	y = 0;
+	if (str)
+	{
+		while (str[i] && str[i] != '\n')
+			i++;
+		while (str[++i])
+			str[y++] = str[i];
+		while (y <= i)
+			str[y++] = '\0';
+		
+	}
+}
+
+int	ft_strlen(char *str)
+{
+	int	i;
 
 	i = 0;
 	if (str)
 	{
 		while (str[i])
-		i++;
+			i++;
 	}
 	return (i);
+}
+
+char	*ft_strjoin(char *s1, char *s2)
+{
+	int	i;
+	int	y;
+	char	*res;
+
+	i = 0;
+	y = 0;
+	res = malloc((ft_strlen(s1) + ft_strlen(s2)) + 1);
+	if (!res)
+		return (NULL);
+	while (i < ft_strlen(s1))
+		res[y++] = s1[i++];
+	i = 0;
+	while (i < ft_strlen(s2))
+		res[y++] = s2[i++];
+	res[y] = '\0';
+	return (res);
 }
 
 int	ft_check_buffer(char *str)
@@ -40,6 +109,8 @@ int	ft_check_buffer(char *str)
 	int	i;
 
 	i = 0;
+	if (!str)
+		return (0);
 	while (str[i])
 	{
 		if (str[i] == '\n')
@@ -49,81 +120,26 @@ int	ft_check_buffer(char *str)
 	return (0);
 }
 
-char	*ft_strjoin(int count, char *s1, char *buf)
-{
-	size_t	i;
-	size_t	y;
-	char	*res;
-	i = -1;
-	y = 0;
-
-	count++;
-	res = malloc((ft_strlen(s1) + ft_strlen(buf)) + 1);
-	if (!res)
-		return (NULL);
-	while (++i < ft_strlen(s1))
-		res[i] = s1[i];
-	while (y < ft_strlen(buf) && buf[y] != '\n')
-		res[i++] = buf[y++];
-	res[i] = '\0';
-	return (res);
-}
-
-char	*xd(char *dest, char *buf)
+char	*ft_fils(char *str)
 {
 	int	i;
 	int	y;
+	char	*res;
 
 	i = 0;
 	y = 0;
-	while(buf[i] != '\n')
+	while (str[i])
+	{
+		if (str[i] == '\n')
+			break;
 		i++;
-	if (ft_check_buffer(buf))
-	{
-		dest = malloc(i + 1);
-		while(y < i)
-		{
-			dest[y] = buf[y];
-			y++;
-		}
 	}
-	return (dest);
-}
-
-char	*get_next_line(int fd)
-{
-	char	*res;
-	int	count;
-//	int	i;
-
-	//TODO GERER LE CAS OU BUFFER_SIZE EST SUPPERIEUR A LA LIGNE
-//	i = 0;
-	res = NULL;
-	count = 1;
-	static char	buf[BUFFER_SIZE];
-	//printf("BUFFER: %s\n", buf);
-	while (read(fd, buf, BUFFER_SIZE) && ft_check_buffer(buf))
+	res = malloc(i + 1);
+	while (y <= i)
 	{
-		res = ft_strjoin(count, res, buf);
-		if (!res)
-			return (NULL);
-		count++;
+		res[y] = str[y];
+		y++;
 	}
-	//int 	y;
-	//y = 0;
-	//y = ft_strlen(res + 1);
-	//while (res && res[y])
-	//	y++;
-	/*if (ft_check_buffer(buf))
-	{
-		while (buf[i] != '\n')
-			res[y++] = buf[i++];
-	}*/
-	if (ft_check_buffer(buf))
-		res = ft_strjoin(count, res, buf);
-	int len = ft_strlen(res);
-	res[len] = '\n';
-	//res[y] = '\n';
 	return (res);
 }
 
