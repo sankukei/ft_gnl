@@ -18,38 +18,50 @@
 #include <stdlib.h>
 #include "get_next_line.h"
 
-#define BUFFER_SIZE 2
+#define BUFFER_SIZE 5
 
 int	ft_check_buffer(char *str);
 char	*ft_strjoin(char *s1, char *s2);
 char	*ft_fils(char *str);
 void	ft_purge(char *str);
+int	ft_strlen(char *str);
 
 char	*get_next_line(int fd)
 {
 	char	*res;
 	int	count;
-	int	bol;
+	char	*tmp;
+	int	xdd;
+
+	xdd = 0;
 	res = 0;
 	count = 0;
-	bol = 0;
+	tmp = NULL;
 	static char	buf[BUFFER_SIZE];
- 
-	 while (!ft_check_buffer(buf))
+	int	i;
+
+	i = 0;
+	if (buf[0])
+	{
+		res = ft_strjoin(res, buf);
+	} else
+		while (i < BUFFER_SIZE)
+			buf[i++] = 0;
+
+
+	while (!ft_check_buffer(buf))
 	{
 		count = read(fd, buf, BUFFER_SIZE);
+		if (count == 0 && !ft_strlen(res))
+			return (NULL);
+		if (count < BUFFER_SIZE)
+			buf[count] = '\0';
+		tmp = res;
 		res = ft_strjoin(res, buf);
-		res = ft_fils(res);
 	}
-	if (count > 0)
-		ft_purge(buf);
-	 while (count == 0 && buf[0] && bol != 1)
-	{
-		res = ft_fils(buf);
-		ft_purge(buf);
-		bol = 1;
-	}
-	return (res);
+	char *line = ft_fils(res);
+	ft_purge(buf);
+	return (line);
 }
 
 void	ft_purge(char *str)
@@ -63,9 +75,11 @@ void	ft_purge(char *str)
 	{
 		while (str[i] && str[i] != '\n')
 			i++;
-		while (str[++i])
-			str[y++] = str[i];
-		while (y <= i)
+		if (str[i] == '\n')
+			i++;
+		while (str[i])
+			str[y++] = str[i++];
+		while (y < BUFFER_SIZE)
 			str[y++] = '\0';
 		
 	}
@@ -128,18 +142,17 @@ char	*ft_fils(char *str)
 
 	i = 0;
 	y = 0;
-	while (str[i])
-	{
-		if (str[i] == '\n')
-			break;
+	while (str[i] && str[i] != '\n')
 		i++;
-	}
-	res = malloc(i + 1);
-	while (y <= i)
+	res = malloc(i + 2);
+	if (!res)
+		return (NULL);
+	while (y <= i && str[y])
 	{
 		res[y] = str[y];
 		y++;
 	}
+	res[y] = '\0';
 	return (res);
 }
 
