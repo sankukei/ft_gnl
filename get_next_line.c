@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leothoma <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: leothoma <leothoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 21:14:04 by leothoma          #+#    #+#             */
-/*   Updated: 2024/12/17 21:14:04 by leothoma         ###   ########.fr       */
+/*   Updated: 2024/12/17 22:57:33 by leothoma         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "get_next_line.h"
 
@@ -16,7 +16,7 @@ char	*get_next_line(int fd)
 {
 	char		*res;
 	int			count;
-	static char	*buf;
+	static char	*buf = NULL;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (0);
@@ -25,7 +25,7 @@ char	*get_next_line(int fd)
 		buf = ft_calloc(1, 1);
 	res = ft_calloc(BUFFER_SIZE + 1, 1);
 	if (!buf || !res)
-		return (NULL);
+		return (free(buf), free (res), NULL);
 	while (count > 0)
 	{
 		count = read(fd, res, BUFFER_SIZE);
@@ -38,6 +38,7 @@ char	*get_next_line(int fd)
 	}
 	res = ft_fils(buf, res);
 	buf = ft_purge(buf);
+	free(buf);
 	return (res);
 }
 
