@@ -6,7 +6,7 @@
 /*   By: leothoma <leothoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 21:14:04 by leothoma          #+#    #+#             */
-/*   Updated: 2024/12/18 02:40:04 by leothoma         ###   ########.fr       */
+/*   Updated: 2024/12/18 21:03:37 by leothoma         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -30,23 +30,20 @@ char	*get_next_line(int fd)
 	{
 		count = read(fd, res, BUFFER_SIZE);
 		if (count == 0 && !ft_strlen(buf))
-			return (free(buf), free(res), NULL);
+		{
+			free(buf);
+			buf = 0;
+			free(res);
+			res = 0;
+			return (NULL);
+		}
 		res[count] = '\0';
 		buf = ft_strjoin(buf, res);
 		if (ft_check_buffer(buf))
 			break ;
 	}
-	/*if (count == 0)
-	{
-		free(buf);
-		return (NULL);
-	}*/
 	res = ft_fils(buf, res);
 	buf = ft_purge(buf);
-//	if (count == 0)
-//		free(buf);
-	/*else 
-		buf = ft_purge(buf);*/
 	return (res);
 }
 
@@ -59,24 +56,19 @@ char	*ft_purge(char *str)
 	i = 0;
 	y = 0;
 	tmp = NULL;
-	if (!str[i])
-	{
-		free(str);
-		return (NULL);
-	}
 	while (str[i] && str[i] != '\n')
 		i++;
-	if (str[i] == '\n')
-		i++;
 	if (!str[i])
 	{
 		free(str);
+		str = 0;
 		return (NULL);
 	}
-	tmp = ft_calloc(i + 15, 1);
+	tmp = ft_calloc(ft_strlen(str) - i  + 1, 1);
 	//TODO verif alloc 15 precisement pour le fsanitize
 	if (!tmp)
 		return (free(str), NULL);
+	i++;
 	while (str[i])
 		tmp[y++] = str[i++];
 	tmp[y] = 0;
@@ -93,6 +85,8 @@ char	*ft_strjoin(char *s1, char *s2)
 	int	len1;
 	int	len2;
 
+	if (!s1 || !s2)
+		return (NULL);
 	i = 0;
 	y = 0;
 	len1 = ft_strlen(s1);
@@ -100,13 +94,14 @@ char	*ft_strjoin(char *s1, char *s2)
 	res = malloc((ft_strlen(s1) + ft_strlen(s2)) + 1);
 	if (!res)
 		return (NULL);
-	while (i < len1)
+	while (s1[i])
 		res[y++] = s1[i++];
 	i = 0;
-	while (i < len2)
+	while (s2[i])
 		res[y++] = s2[i++];
 	res[y] = '\0';
 	free(s1);
+	s1 = 0;
 	return (res);
 }
 
@@ -157,10 +152,11 @@ char	*ft_fils(char *str, char *r)
 		res[y++] = '\n';
 	res[y] = '\0';
 	free(r);
+	r = 0;
 	return (res);
 }
 
-int	main(void)
+/* int	main(void)
 {
 	#include <stdio.h>
 	int	fd;
@@ -175,4 +171,4 @@ int	main(void)
 		free(line);
 	}
 	return (0);
-}
+} */
