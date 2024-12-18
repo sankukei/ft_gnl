@@ -73,7 +73,8 @@ char	*ft_purge(char *str)
 		free(str);
 		return (NULL);
 	}
-	tmp = ft_calloc(i + 2, 1);
+	tmp = ft_calloc(i + 15, 1);
+	//TODO verif alloc 15 precisement pour le fsanitize
 	if (!tmp)
 		return (free(str), NULL);
 	while (str[i])
@@ -173,25 +174,5 @@ int	main(void)
 		printf("line %02zu : %s", i++, line);
 		free(line);
 	}
-/*	
-	line = get_next_line(fd);	
-	printf("%s", line);
-	free(line);
-	line = get_next_line(fd);	
-	printf("%s", line);
-	free(line);
-	line = get_next_line(fd);	
-	printf("%s", line);
-	free(line);
-
-	fd = open("./test", O_RDONLY);
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
-	return (0);*/
+	return (0);
 }
