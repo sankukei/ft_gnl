@@ -16,7 +16,7 @@ char	*get_next_line(int fd)
 {
 	char		*res;
 	int			count;
-	static char	*buf = NULL;
+	static char	*buf;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (0);
@@ -25,11 +25,11 @@ char	*get_next_line(int fd)
 		buf = ft_calloc(1, 1);
 	res = ft_calloc(BUFFER_SIZE + 1, 1);
 	if (!buf || !res)
-		return (free(buf), free (res), NULL);
+		return (NULL);
 	while (count > 0)
 	{
 		count = read(fd, res, BUFFER_SIZE);
-		if (count == 0 && !ft_strlen(res))
+		if (count == 0 && !ft_strlen(buf))
 			return (free(buf), free(res), NULL);
 		res[count] = '\0';
 		buf = ft_strjoin(buf, res);
@@ -38,7 +38,6 @@ char	*get_next_line(int fd)
 	}
 	res = ft_fils(buf, res);
 	buf = ft_purge(buf);
-	free(buf);
 	return (res);
 }
 
@@ -50,7 +49,7 @@ char	*ft_purge(char *str)
 
 	i = 0;
 	y = 0;
-	tmp = 0;
+	tmp = NULL;
 	if (str)
 	{
 		while (str[i] && str[i] != '\n')
@@ -64,11 +63,13 @@ char	*ft_purge(char *str)
 			return (free(str), NULL);
 		while (str[i])
 			str[y++] = str[i++];
+		while (str[y])
+			str[y++] = 0;
 		tmp[y] = 0;
 	}
-	free(str);
-	str = 0;
-	return (tmp);
+//	free(str);
+//	str = 0;
+	return (str);
 }
 
 char	*ft_strjoin(char *s1, char *s2)
@@ -151,7 +152,7 @@ int	main(void)
 {
 	#include <stdio.h>
 	int	fd;
-	char	*line;
+/*	char	*line;
 	size_t	i;
 
 	i = 0;
@@ -163,5 +164,16 @@ int	main(void)
 	line = get_next_line(fd);
 	printf("line %zu : %s", i++, line);
 	free(line);
+*/
+	fd = open("./test", O_RDONLY);
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
 	return (0);
 }
