@@ -36,8 +36,17 @@ char	*get_next_line(int fd)
 		if (ft_check_buffer(buf))
 			break ;
 	}
+	/*if (count == 0)
+	{
+		free(buf);
+		return (NULL);
+	}*/
 	res = ft_fils(buf, res);
 	buf = ft_purge(buf);
+//	if (count == 0)
+//		free(buf);
+	/*else 
+		buf = ft_purge(buf);*/
 	return (res);
 }
 
@@ -51,13 +60,19 @@ char	*ft_purge(char *str)
 	y = 0;
 	tmp = NULL;
 	if (!str[i])
+	{
+		free(str);
 		return (NULL);
+	}
 	while (str[i] && str[i] != '\n')
 		i++;
 	if (str[i] == '\n')
 		i++;
 	if (!str[i])
+	{
+		free(str);
 		return (NULL);
+	}
 	tmp = ft_calloc(i + 2, 1);
 	if (!tmp)
 		return (free(str), NULL);
@@ -158,9 +173,18 @@ int	main(void)
 		printf("line %02zu : %s", i++, line);
 		free(line);
 	}
+/*	
+	line = get_next_line(fd);	
+	printf("%s", line);
+	free(line);
+	line = get_next_line(fd);	
+	printf("%s", line);
+	free(line);
+	line = get_next_line(fd);	
+	printf("%s", line);
+	free(line);
 
-	
-	/*fd = open("./test", O_RDONLY);
+	fd = open("./test", O_RDONLY);
 	printf("%s", get_next_line(fd));
 	printf("%s", get_next_line(fd));
 	printf("%s", get_next_line(fd));
@@ -169,6 +193,5 @@ int	main(void)
 	printf("%s", get_next_line(fd));
 	printf("%s", get_next_line(fd));
 	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));*/
-	return (0);
+	return (0);*/
 }
