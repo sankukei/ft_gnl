@@ -6,11 +6,22 @@
 /*   By: leothoma <leothoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 21:14:04 by leothoma          #+#    #+#             */
-/*   Updated: 2024/12/18 21:03:37 by leothoma         ###   ########.fr       */
+/*   Updated: 2024/12/19 04:32:39 by leothoma         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
 #include "get_next_line.h"
+
+void	ft_norminette(char *ptr1, int ausecour)
+{
+	if (ausecour == 1)
+	{
+		ptr1 = 0;
+		return ;
+	}
+	free(ptr1);
+	ptr1 = 0;
+}
 
 char	*get_next_line(int fd)
 {
@@ -22,7 +33,7 @@ char	*get_next_line(int fd)
 		return (0);
 	count = 1;
 	if (!buf)
-		buf = ft_calloc(1, 1);
+	 	buf = ft_calloc(1, 1);
 	res = ft_calloc(BUFFER_SIZE + 1, 1);
 	if (!buf || !res)
 		return (NULL);
@@ -33,9 +44,7 @@ char	*get_next_line(int fd)
 		{
 			free(buf);
 			buf = 0;
-			free(res);
-			res = 0;
-			return (NULL);
+			return (ft_norminette(res, 0), NULL);
 		}
 		res[count] = '\0';
 		buf = ft_strjoin(buf, res);
@@ -65,7 +74,6 @@ char	*ft_purge(char *str)
 		return (NULL);
 	}
 	tmp = ft_calloc(ft_strlen(str) - i  + 1, 1);
-	//TODO verif alloc 15 precisement pour le fsanitize
 	if (!tmp)
 		return (free(str), NULL);
 	i++;
@@ -82,15 +90,11 @@ char	*ft_strjoin(char *s1, char *s2)
 	int		i;
 	int		y;
 	char	*res;
-	int	len1;
-	int	len2;
 
 	if (!s1 || !s2)
 		return (NULL);
 	i = 0;
 	y = 0;
-	len1 = ft_strlen(s1);
-	len2 = ft_strlen(s2);
 	res = malloc((ft_strlen(s1) + ft_strlen(s2)) + 1);
 	if (!res)
 		return (NULL);
@@ -156,19 +160,42 @@ char	*ft_fils(char *str, char *r)
 	return (res);
 }
 
-/* int	main(void)
-{
-	#include <stdio.h>
-	int	fd;
-	char	*line;
-	size_t	i;
+// int	main(void)
+// {
+// 	#include <stdio.h>
+// 	int	fd;
+// 	char	*line;
+// 	size_t	i;
 
-	i = 0;
-	fd = open("./test", O_RDONLY);
-	while ((line = get_next_line(fd)))
-	{
-		printf("line %02zu : %s", i++, line);
-		free(line);
-	}
-	return (0);
-} */
+// 	i = 0;
+// 	fd = open("./test", O_RDONLY);
+// 	while((line = get_next_line(fd)))
+// 	{
+// 		printf("line %02zu : %s", i++, line);
+// 		free(line);
+// 	}
+	
+// 	// printf("line %02zu : %s", i++, line);
+// 	// free(line);
+// 	// line = get_next_line(fd);
+// 	// printf("line %02zu : %s", i++, line);
+// 	// free(line);
+// 	// if (BUFFER_SIZE > 100) {
+// 	// 	char *temp;
+// 	// 	do {
+// 	// 		temp = get_next_line(fd);
+// 	// 		free(temp);
+// 	// 	} while (temp != NULL);
+// 	// }
+// 	// printf("line %02zu : %s", i++, get_next_line(fd));
+// 	// close(fd);
+// 	// printf("\n");
+// 	// i = 0;
+// 	// fd = open("./test", O_RDONLY);
+// 	// while ((line = get_next_line(fd)))
+// 	// {
+// 	// 	printf("line %02zu : %s", i++, line);
+// 	// 	free(line);
+// 	// }
+// 	return (0);
+// }
