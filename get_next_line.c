@@ -1,27 +1,16 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leothoma <leothoma@student.42.fr>          +#+  +:+       +#+        */
+/*   By: leothoma <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/17 21:14:04 by leothoma          #+#    #+#             */
-/*   Updated: 2024/12/19 04:32:39 by leothoma         ###   ########.fr       */
+/*   Created: 2024/12/20 14:33:31 by leothoma          #+#    #+#             */
+/*   Updated: 2024/12/20 14:33:31 by leothoma         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "get_next_line.h"
-
-void	ft_norminette(char *ptr1, int ausecour)
-{
-	if (ausecour == 1)
-	{
-		ptr1 = 0;
-		return ;
-	}
-	free(ptr1);
-	ptr1 = 0;
-}
 
 char	*get_next_line(int fd)
 {
@@ -29,11 +18,11 @@ char	*get_next_line(int fd)
 	int			count;
 	static char	*buf;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0 ) 
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 		return (0);
 	count = 1;
 	if (!buf)
-	 	buf = ft_calloc(1, 1);
+		buf = ft_calloc(1, 1);
 	res = ft_calloc(BUFFER_SIZE + 1, 1);
 	if (!buf || !res)
 		return (NULL);
@@ -41,11 +30,7 @@ char	*get_next_line(int fd)
 	{
 		count = read(fd, res, BUFFER_SIZE);
 		if (count == 0 && !ft_strlen(buf))
-		{
-			free(buf);
-			buf = 0;
-			return (ft_norminette(res, 0), NULL);
-		}
+			return (free(buf), buf = 0, ft_norminette(res, 0), NULL);
 		res[count] = '\0';
 		buf = ft_strjoin(buf, res);
 		if (ft_check_buffer(buf))
@@ -73,7 +58,7 @@ char	*ft_purge(char *str)
 		str = 0;
 		return (NULL);
 	}
-	tmp = ft_calloc(ft_strlen(str) - i  + 1, 1);
+	tmp = ft_calloc(ft_strlen(str) - i + 1, 1);
 	if (!tmp)
 		return (free(str), NULL);
 	i++;
@@ -125,7 +110,6 @@ int	ft_check_buffer(char *str)
 	return (0);
 }
 
-#include <stdio.h>
 char	*ft_fils(char *str, char *r)
 {
 	int		i;
@@ -142,11 +126,7 @@ char	*ft_fils(char *str, char *r)
 		i++;
 	res = malloc(i + 1);
 	if (!res)
-	{
-		free(str);
-		str = 0;
-		return (NULL);
-	}
+		return (free(str), str = 0, NULL);
 	while (str[y] && str[y] != '\n')
 	{
 		res[y] = str[y];
@@ -155,8 +135,7 @@ char	*ft_fils(char *str, char *r)
 	if (str[i - 1] == '\n')
 		res[y++] = '\n';
 	res[y] = '\0';
-	free(r);
-	r = 0;
+	ft_norminette(r, 0);
 	return (res);
 }
 
@@ -169,12 +148,11 @@ char	*ft_fils(char *str, char *r)
 
 // 	i = 0;
 // 	fd = open("./test", O_RDONLY);
-// 	while((line = get_next_line(fd)))
+// 	while((line = gnl(fd)))
 // 	{
 // 		printf("line %02zu : %s", i++, line);
 // 		free(line);
 // 	}
-	
 // 	// printf("line %02zu : %s", i++, line);
 // 	// free(line);
 // 	// line = get_next_line(fd);

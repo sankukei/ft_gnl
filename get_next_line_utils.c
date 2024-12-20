@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: leothoma <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/17 17:45:53 by leothoma          #+#    #+#             */
-/*   Updated: 2024/12/17 17:45:53 by leothoma         ###   ########.fr       */
+/*   Created: 2024/12/20 14:41:00 by leothoma          #+#    #+#             */
+/*   Updated: 2024/12/20 14:41:00 by leothoma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,4 +43,15 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	while (i++ < nmemb * size)
 		*tmp++ = 0;
 	return (res);
+}
+
+void	ft_norminette(char *ptr1, int ausecour)
+{
+	if (ausecour == 1)
+	{
+		ptr1 = 0;
+		return ;
+	}
+	free(ptr1);
+	ptr1 = 0;
 }
